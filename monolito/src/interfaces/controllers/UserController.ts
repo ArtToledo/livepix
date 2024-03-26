@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { CreateUserUseCase } from '@domains/usecases';
 import { UserService } from '@domains/services';
+import { HttpResponse } from '@interfaces/protocols';
+import { created, serverError } from '@interfaces/helpers';
 
 export class UserController {
   constructor(private createUserUseCase: CreateUserUseCase) {}
 
-  async create(req: Request, res: Response): Promise<void> {
+  async create(req: Request, res: Response) {
     try {
       const passwordEncrypted = await UserService.hashPassword(
         req.body.password,
@@ -15,9 +17,14 @@ export class UserController {
       const { _id, name, email } = await this.createUserUseCase.execute(
         req.body,
       );
-      res.status(201).json({ _id, name, email });
+
+      await this.handleResponse(res, created({ _id, name, email }));
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      await this.handleResponse(res, serverError(error));
     }
+  }
+
+  async handleResponse(res: Response, result: HttpResponse) {
+    res.status(result.statusCode).json(result.body);
   }
 }
