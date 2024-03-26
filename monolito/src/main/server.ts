@@ -1,5 +1,5 @@
 require('dotenv').config();
-import { MongoHelper } from '../infra/config';
+import { MongoHelper } from '@infra/config';
 import app from './app';
 
 MongoHelper.connect(process.env.DB_MONGO_URL)
