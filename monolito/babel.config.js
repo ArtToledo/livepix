@@ -23,6 +23,7 @@ module.exports = {
           '@data': './src/data',
           '@interfaces': './src/interfaces',
           '@adapters': './src/adapters',
+          '@main': './src/main',
         },
       },
     ],

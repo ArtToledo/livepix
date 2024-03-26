@@ -23,9 +23,9 @@
       "@models/*": ["./src/data/mongoose/models/*"],
       "@data/*": ["./src/data/*"],
       "@interfaces/*": ["./src/interfaces/*"],
-      "@adapters/*": ["./src/adapters/*"]
+      "@adapters/*": ["./src/adapters/*"],
+      "@main/*": ["./src/main/*"]
     }
   },
-  "include": ["src/**/*", "src/__tests__", "jest.config.js"],
-  "exclude": ["src/__tests__", "jest.config.js"]
+  "include": ["src/**/*", "src/__tests__", "jest.config.js"]
 }
