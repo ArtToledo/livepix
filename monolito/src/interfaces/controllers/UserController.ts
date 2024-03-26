@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { CreateUserUseCase, FindUserByIdUseCase } from '@domains/usecases';
 import { UserService } from '@domains/services';
-import { HttpResponse } from '@interfaces/protocols';
-import { created, ok, serverError } from '@interfaces/helpers';
+import { created, handleResponse, ok, serverError } from '@interfaces/helpers';
 
 export class UserController {
   constructor(
@@ -20,9 +19,9 @@ export class UserController {
       const { _id, name, email } = await this.createUserUseCase.execute(
         req.body,
       );
-      await this.handleResponse(res, created({ _id, name, email }));
+      await handleResponse(res, created({ _id, name, email }));
     } catch (error) {
-      await this.handleResponse(res, serverError(error));
+      await handleResponse(res, serverError(error));
     }
   }
 
@@ -31,13 +30,9 @@ export class UserController {
       const { id } = req.params;
       const { _id, name, email } = await this.findUserByIdUseCase.execute(id);
 
-      await this.handleResponse(res, ok({ _id, name, email }));
+      await handleResponse(res, ok({ _id, name, email }));
     } catch (error) {
-      await this.handleResponse(res, serverError(error));
+      await handleResponse(res, serverError(error));
     }
-  }
-
-  async handleResponse(res: Response, result: HttpResponse) {
-    res.status(result.statusCode).json(result.body);
   }
 }
