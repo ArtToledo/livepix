@@ -19,8 +19,10 @@
       "@infra/*": ["./src/infra/*"],
       "@schemas/*": ["./src/data/mongoose/schemas/*"],
       "@entities/*": ["./src/domains/entities/*"],
-      "@domains/*": ["./src/domains/*"]
+      "@domains/*": ["./src/domains/*"],
+      "@models/*": ["./src/data/mongoose/models/*"],
+      "@data/*": ["./src/data/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/__tests__", "jest.config.js"]
 }

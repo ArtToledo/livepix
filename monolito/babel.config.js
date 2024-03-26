@@ -19,6 +19,8 @@ module.exports = {
           '@schemas': './src/data/mongoose/schemas',
           '@entities': './src/domains/entities',
           '@domains': './src/domains',
+          '@models': './src/data/mongoose/models',
+          '@data': './src/data',
         },
       },
     ],
