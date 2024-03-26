@@ -8,4 +8,5 @@ module.exports = {
     prefix: '<rootDir>',
   }),
   preset: 'ts-jest',
+  testMatch: ['**/*.test.ts'],
 };

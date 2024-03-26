@@ -1,24 +1,32 @@
 import { Request, Response } from 'express';
-import { CreateUserUseCase } from '@domains/usecases';
+import { CreateUserUseCase, FindUserByIdUseCase } from '@domains/usecases';
 import { UserService } from '@domains/services';
 import { HttpResponse } from '@interfaces/protocols';
-import { created, serverError } from '@interfaces/helpers';
+import { created, ok, serverError } from '@interfaces/helpers';
 
 export class UserController {
-  constructor(private createUserUseCase: CreateUserUseCase) {}
+  constructor(
+    private createUserUseCase: CreateUserUseCase,
+    private findUserByIdUseCase: FindUserByIdUseCase,
+  ) {}
 
   async create(req: Request, res: Response) {
     try {
-      const passwordEncrypted = await UserService.hashPassword(
-        req.body.password,
-      );
-      req.body.password = passwordEncrypted;
-
       const { _id, name, email } = await this.createUserUseCase.execute(
         req.body,
       );
-
       await this.handleResponse(res, created({ _id, name, email }));
+    } catch (error) {
+      await this.handleResponse(res, serverError(error));
+    }
+  }
+
+  async findById(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const { _id, name, email } = await this.findUserByIdUseCase.execute(id);
+
+      await this.handleResponse(res, ok({ _id, name, email }));
     } catch (error) {
       await this.handleResponse(res, serverError(error));
     }

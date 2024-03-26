@@ -24,7 +24,8 @@
       "@data/*": ["./src/data/*"],
       "@interfaces/*": ["./src/interfaces/*"],
       "@adapters/*": ["./src/adapters/*"],
-      "@main/*": ["./src/main/*"]
+      "@main/*": ["./src/main/*"],
+      "@tests/*": ["./src/__tests__/*"]
     }
   },
   "include": ["src/**/*", "src/__tests__", "jest.config.js"]

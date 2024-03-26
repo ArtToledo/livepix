@@ -24,6 +24,7 @@ module.exports = {
           '@interfaces': './src/interfaces',
           '@adapters': './src/adapters',
           '@main': './src/main',
+          '@tests': './src/__tests__',
         },
       },
     ],
