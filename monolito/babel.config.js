@@ -21,6 +21,8 @@ module.exports = {
           '@domains': './src/domains',
           '@models': './src/data/mongoose/models',
           '@data': './src/data',
+          '@interfaces': './src/interfaces',
+          '@adapters': './src/adapters',
         },
       },
     ],
