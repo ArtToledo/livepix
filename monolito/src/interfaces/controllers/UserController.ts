@@ -19,9 +19,9 @@ export class UserController {
       const { _id, name, email } = await this.createUserUseCase.execute(
         req.body,
       );
-      await handleResponse(res, created({ _id, name, email }));
+      handleResponse(res, created({ _id, name, email }));
     } catch (error) {
-      await handleResponse(res, serverError(error));
+      handleResponse(res, serverError(error));
     }
   }
 
@@ -30,9 +30,9 @@ export class UserController {
       const { id } = req.params;
       const { _id, name, email } = await this.findUserByIdUseCase.execute(id);
 
-      await handleResponse(res, ok({ _id, name, email }));
+      handleResponse(res, ok({ _id, name, email }));
     } catch (error) {
-      await handleResponse(res, serverError(error));
+      handleResponse(res, serverError(error));
     }
   }
 }
