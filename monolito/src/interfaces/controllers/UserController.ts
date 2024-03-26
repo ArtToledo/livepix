@@ -12,6 +12,11 @@ export class UserController {
 
   async create(req: Request, res: Response) {
     try {
+      const passwordEncrypted = await UserService.hashPassword(
+        req.body.password,
+      );
+      req.body.password = passwordEncrypted;
+
       const { _id, name, email } = await this.createUserUseCase.execute(
         req.body,
       );
