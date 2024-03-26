@@ -16,6 +16,9 @@ module.exports = {
       {
         alias: {
           '@infra': './src/infra',
+          '@schemas': './src/data/mongoose/schemas',
+          '@entities': './src/domains/entities',
+          '@domains': './src/domains',
         },
       },
     ],
