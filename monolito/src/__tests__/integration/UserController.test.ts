@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import { faker } from '@faker-js/faker';
 
 import app from '@main/app';
-import UserModel from '@models/UserModel';
 import { CreateUserUseCase, FindUserByIdUseCase } from '@domains/usecases';
 import { throwError } from '@tests/helpers';
 

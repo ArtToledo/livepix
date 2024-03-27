@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { faker } from '@faker-js/faker';
 
 import { MongoDonationRepository } from '@data/mongoose/repositories';
-import DonationModel from '@models/DonationModel';
+import { DonationModel } from '@models/DonationModel';
 import { Donation } from '@entities/Donation';
 
 describe('MongoDB Donation Repository', () => {
