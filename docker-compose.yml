@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  nodejs:
+    build:
+      context: ./monolito
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    container_name: api
+    depends_on:
+      - mongodb
+    environment:
+     - PORT=3000
+     - DB_MONGO_URL=mongodb://mongo:27017/livepixdb
+     - SECRET_AUTH=testelivepix123
+
+  mongodb:
+    image: mongo
+    ports:
+      - '27018:27017'
+    container_name: mongo
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
