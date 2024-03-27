@@ -9,12 +9,6 @@ import { CreateUserUseCase, FindUserByIdUseCase } from '@domains/usecases';
 import { throwError } from '@tests/helpers';
 
 describe('User Controller Integration', () => {
-  const dataUserToCreate = {
-    name: faker.internet.displayName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  };
-
   beforeAll(async () => {
     await mongoose.connect(`${process.env.DB_TEST_MONGO_URL}`);
   });
@@ -23,11 +17,8 @@ describe('User Controller Integration', () => {
     await mongoose.connection.close();
   });
 
-  afterEach(async () => {
-    await UserModel.deleteMany({});
-  });
-
   it('POST /user - should create a user with return 201', async () => {
+    const dataUserToCreate = generateDataUserToCreate();
     const response = await request(app)
       .post('/api/user')
       .send(dataUserToCreate);
@@ -39,8 +30,19 @@ describe('User Controller Integration', () => {
   });
 
   it('GET /:id - should get a user passing id as a parameter return 200', async () => {
-    const user = await UserModel.create(dataUserToCreate);
-    const response = await request(app).get(`/api/user/${user._id}`);
+    const dataUserToCreate = generateDataUserToCreate();
+    const { body: user } = await request(app)
+      .post('/api/user')
+      .send(dataUserToCreate);
+
+    const { body: dataToken } = await request(app).post('/api/auth').send({
+      email: dataUserToCreate.email,
+      password: dataUserToCreate.password,
+    });
+
+    const response = await request(app)
+      .get(`/api/user/${user._id}`)
+      .set('Authorization', `Bearer ${dataToken.token}`);
 
     expect(response.status).toBe(200);
     expect(response.body.name).toEqual(user.name);
@@ -48,9 +50,11 @@ describe('User Controller Integration', () => {
   });
 
   it('POST /user - should return 500 when trying to add user', async () => {
+    const dataUserToCreate = generateDataUserToCreate();
+
     jest
       .spyOn(CreateUserUseCase.prototype, 'execute')
-      .mockRejectedValue(throwError);
+      .mockRejectedValueOnce(throwError);
 
     const response = await request(app)
       .post('/api/user')
@@ -61,19 +65,32 @@ describe('User Controller Integration', () => {
   });
 
   it('GET /:id - should return 500 when trying get user passing id as a parameter', async () => {
-    const user = await UserModel.create({
-      name: faker.internet.displayName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const dataUserToCreate = generateDataUserToCreate();
+
+    const { body: user } = await request(app)
+      .post('/api/user')
+      .send(dataUserToCreate);
+
+    const { body: dataToken } = await request(app).post('/api/auth').send({
+      email: dataUserToCreate.email,
+      password: dataUserToCreate.password,
     });
 
     jest
       .spyOn(FindUserByIdUseCase.prototype, 'execute')
-      .mockRejectedValue(throwError);
+      .mockRejectedValueOnce(throwError);
 
-    const response = await request(app).get(`/api/user/${user._id}`);
+    const response = await request(app)
+      .get(`/api/user/${user._id}`)
+      .set('Authorization', `Bearer ${dataToken.token}`);
 
     expect(response.status).toBe(500);
     expect(response.body.name).toEqual('ServerError');
   });
+});
+
+const generateDataUserToCreate = () => ({
+  name: faker.internet.displayName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
 });

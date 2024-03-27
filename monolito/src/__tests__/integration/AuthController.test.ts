@@ -9,12 +9,6 @@ import { throwError } from '@tests/helpers';
 import { FindUserByEmailUseCase } from '@domains/usecases';
 
 describe('Auth Controller Integration', () => {
-  const dataUserToCreate = {
-    name: faker.internet.displayName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  };
-
   beforeAll(async () => {
     await mongoose.connect(`${process.env.DB_TEST_MONGO_URL}`);
   });
@@ -23,11 +17,8 @@ describe('Auth Controller Integration', () => {
     await mongoose.connection.close();
   });
 
-  afterEach(async () => {
-    await UserModel.deleteMany({});
-  });
-
   it('POST /auth - should return token when authenticating', async () => {
+    const dataUserToCreate = generateDataUserToCreate();
     await request(app).post('/api/user').send(dataUserToCreate);
 
     const response = await request(app).post('/api/auth').send({
@@ -40,6 +31,8 @@ describe('Auth Controller Integration', () => {
   });
 
   it('POST /auth - should return 500 when trying to authenticating', async () => {
+    const dataUserToCreate = generateDataUserToCreate();
+
     jest
       .spyOn(FindUserByEmailUseCase.prototype, 'execute')
       .mockRejectedValueOnce(throwError);
@@ -54,6 +47,7 @@ describe('Auth Controller Integration', () => {
   });
 
   it('POST /auth - should return 401 when trying to authenticating with invalid credentials', async () => {
+    const dataUserToCreate = generateDataUserToCreate();
     await request(app).post('/api/user').send(dataUserToCreate);
 
     const response = await request(app).post('/api/auth').send({
@@ -64,4 +58,10 @@ describe('Auth Controller Integration', () => {
     expect(response.status).toBe(401);
     expect(response.body.name).toEqual('UnauthorizedError');
   });
+});
+
+const generateDataUserToCreate = () => ({
+  name: faker.internet.displayName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
 });
